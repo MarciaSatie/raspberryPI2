@@ -6,6 +6,9 @@ from datetime import datetime
 from sense_hat import SenseHat
 from picamera2 import Picamera2
 
+from upload_cloudinary import upload_image
+
+
 #use os to set up base and static folder 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)) #get current directory
 STATIC_DIR = os.path.join(BASE_DIR, "static") #set static directory path
@@ -43,6 +46,23 @@ try:
             if event.action == "pressed" and event.direction == "middle":
                 print("Button pressed at", datetime.now())
                 capture_photo()
+                
+                ### Uploading to Cloudinary
+                print("Uploading to cloud...")
+                cloud_url = upload_image(IMAGE_PATH)
+
+                new_state = {
+                    "ts": int(time.time()),
+                    "url": cloud_url
+                }
+
+                # Saving new_state info to pics.json
+                with open(STATE_PATH, "w") as f:
+                    json.dump(new_state, f)
+                
+                print(f"State updated with new URL: {cloud_url}")
+                
+
         time.sleep(0.1)
 except KeyboardInterrupt:
     print("Exiting...")

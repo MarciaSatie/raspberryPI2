@@ -12,9 +12,15 @@ def load_state():
     try:
         with open(STATE_PATH) as f:
             data = json.load(f)
-        ts = data.get("ts")
+        ts = data.get("ts") # get timestamp from json file.
         if not ts:
             return None
+
+        url_from_file = data.get("url", "") # get image url (Cloudinary) from json file.
+        data["url"] = url_from_file # trick brouser's cache
+
+
+
         age = int(time.time()) - ts
         time_str = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
         data["age"] = age
