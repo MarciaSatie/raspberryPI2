@@ -41,4 +41,7 @@ def index():
     )
 
 if __name__ == "__main__":
+    # This allows the app to work on your Pi (port 8000) 
+    # AND on Render (os.environ.get("PORT"))
+    port = int(os.environ.get("PORT", 8000))
     app.run(host="0.0.0.0", port=8000, debug=True)
