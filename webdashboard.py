@@ -15,20 +15,17 @@ app = Flask(__name__, static_folder="static")
 
 def load_state():
     try:
-        with open(STATE_PATH) as f:
-            data = json.load(f)
-        ts = data.get("ts") # get timestamp from json file.
-        if not ts:
-            return None
-
-        url_from_file = data.get("url", "") # get image url (Cloudinary) from json file.
-        data["url"] = f"{url_from_file}?ts={data['ts']}" # trick brouser's cache
-        age = int(time.time()) - ts
-        time_str = datetime.datetime.fromtimestamp(ts).strftime("%Y-%m-%d %H:%M:%S")
-        data["age"] = age
-        data["time_str"] = time_str
-        return data
-
+        # No '/v123456/' in this URL!
+        base_url = "https://res.cloudinary.com/dycw921hz/image/upload/static/last_visitor.jpg"
+        
+        # We add our OWN version (the current time) at the end 
+        # to force Render to show the newest one.
+        clean_url = f"{base_url}?t={int(time.time())}"
+        
+        return {
+            "url": clean_url,
+            "time_str": datetime.datetime.now().strftime("%H:%M:%S")
+        }
     except FileNotFoundError:
         return None
         
