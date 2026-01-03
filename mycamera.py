@@ -1,8 +1,5 @@
 # Any time you open a new terminal for this project, run:
 # source .venv/bin/activate
-#define BLYNK_TEMPLATE_ID "TMPL6Ivb1zVAm"
-#define BLYNK_TEMPLATE_NAME "SensePi"
-#define BLYNK_AUTH_TOKEN "rlae8SVJlydLMI-Y41NYARtBRA2Exvpy"
 
 import time, os
 import json
@@ -15,6 +12,9 @@ from upload_cloudinary import upload_image
 import paho.mqtt.client as mqtt
 
 import BlynkLib, os
+
+import threading # to manage multitask tasks (streaming and take pictures for example)
+from stream_server import run_server, get_ip # Importing methods from stream_server.py
 
 
 
@@ -126,17 +126,30 @@ def handle_v2_write(value):
         trigger_capture_sequence()      
    
 
+
+
+
 ## -------------- Main --------------------------------------------------------------------------
 sense = SenseHat()
 sense.clear(0, 0, 0)
 
 picam2 = Picamera2()
 picam2.configure(picam2.create_still_configuration())
+config = picam2.create_video_configuration(main={"size": (640, 480)})
+picam2.configure(config)
 picam2.start()
 time.sleep(2)  # Give the sensor 2 seconds to stabilize
 print("Camera started. Press the Sense HAT joystick (middle) to take a photo.")
 
+# 3. START STREAM SERVER IN BACKGROUND
+# We pass the 'picam2' object to the server so it can use it
+server_thread = threading.Thread(target=run_server, args=(picam2,))
+server_thread.daemon = True
+server_thread.start()
 
+video_path = get_ip() 
+print("Server is live at: {video_path}")
+blynk.set_property(4, "url", video_path) # updating streaming url path at Blynk
 
 # Call capture_photo when SenseHat btn is pressed.
 try:
