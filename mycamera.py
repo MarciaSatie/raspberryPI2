@@ -14,7 +14,7 @@ import paho.mqtt.client as mqtt
 import BlynkLib, os
 
 import threading # to manage multitask tasks (streaming and take pictures for example)
-from stream_server import run_server, get_ip # Importing methods from stream_server.py
+from stream_server import run_server, get_ip, get_global_url # Importing methods from stream_server.py
 
 
 
@@ -147,8 +147,8 @@ server_thread = threading.Thread(target=run_server, args=(picam2,))
 server_thread.daemon = True
 server_thread.start()
 
-video_path = get_ip() 
-print("Server is live at: {video_path}")
+video_path = get_global_url() 
+print(f"Server is live at: {video_path}")
 blynk.set_property(4, "url", video_path) # updating streaming url path at Blynk
 
 # Call capture_photo when SenseHat btn is pressed.

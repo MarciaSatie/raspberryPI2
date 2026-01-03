@@ -8,6 +8,10 @@ import io # Stores the jpeg images temporary in the RAM memory
 from flask import Flask, Response # It creates a web address (/video_feed) that stays open and keeps "serving" data.
 import socket # to get current ip address (the ip can change time from time, so we will need to update the local path on blink once starting the streaming)
 
+import subprocess # subprocess: lets us run the tunnel command as if we typed it in the terminal.
+import re # re: allows us to search the text for the "https" pattern.
+import os # os: will help us clean up the old log file.
+
 app = Flask(__name__)
 
 # We create a placeholder. The 'mycamera.py' will give us the actual camera later. otherwise I would need to import Picamera2 library to control  the camera.
@@ -27,14 +31,16 @@ def generate_frames():
             
             # 2. Process with OpenCV
             frame_bgr = cv2.cvtColor(frame_data, cv2.COLOR_RGB2BGR)# Color translator, it converts data into the way the OpenCV library understands them.
-            frame_bgr = cv2.flip(frame_bgr, 0) # flipping the camera, (because my physical camera is upside down).
+            #frame_bgr = cv2.flip(frame_bgr, 0) # flipping the camera, (because my physical camera is upside down).
             
-            # 3. Encode, 
+            # 3. Encode,
+            # We use 40 for a good balance of speed and clarity
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 40] 
             # reference: https://www.geeksforgeeks.org/python/python-opencv-imencode-function/
             # later I figure it out you need 2 variables once using cv2.imencode (because this will return Tuple (a fixed list of two items --> Status, Encoded_Data) ).
             ### 1st ret will return a boolen, if Open CV suscceed or not  
             ### 2nd data_encode, will return the jpg (this code transform the data into the img format, at this case jpg)
-            ret, data_encode  = cv2.imencode('.jpg', frame_bgr)
+            ret, data_encode  = cv2.imencode('.jpg', frame_bgr,encode_param)
             if not ret:
                 continue
 
@@ -105,3 +111,30 @@ def get_ip():
     return stream_url
     
 print(get_ip())
+
+# This method will get the new Cloudflare url link, because this changes all the time we re-start the program.
+# This is the free work around way. 
+# referencce subprocess.Popen; https://www.geeksforgeeks.org/python/python-subprocess-module/
+# reference TryCloudflare "free" tunnel: https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/trycloudflare/
+def get_global_url():
+    
+    # this will start a new tunel and return the information inside of tunnel.log file
+    with open("tunnel.log", "w") as f:
+        subprocess.Popen(["cloudflared", "tunnel", "--url", "http://localhost:5000"], stdout=f, stderr=f)
+    
+    print("⏳ Waiting for Cloudflare link...")
+    
+    # 2. Try for 15 seconds
+    for _ in range(15):
+        time.sleep(1)
+        if os.path.exists("tunnel.log"):
+            with open("tunnel.log", "r") as f:
+                log_content = f.read()
+                # Searching in tunnel.log the new cloudflare path to return it.
+                match = re.search(r"https://[-a-z0-9.]+\.trycloudflare\.com", log_content)
+                if match:
+                    return match.group() + "/video_feed"
+    
+    # 3. Final Fallback (Outside the loop!)
+    print("⚠️ Tunnel failed, using local IP.")
+    return get_ip()
