@@ -3,7 +3,7 @@
 IoT TakePic Pi – Raspberry Pi 4 and Camera
 
 📌 Project Overview
-
+- [Youtube Video](https://youtu.be/txTER7NLNN4) - Brief project's showcase
 TakePic Pi is a Raspberry Pi-based IoT project that combines sensing devices with remote image capture. It monitors temperature and humidity via the Sense HAT, captures photos using the Pi Camera, allowing you to stream live video, capture environment data, and store security photos in the cloud.
 
 ### 🛠 How the Project Works
