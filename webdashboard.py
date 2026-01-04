@@ -20,17 +20,18 @@ def load_state():
 
         with open(STATE_PATH, "r") as f:
             data = json.load(f)
-        
-        # We add our OWN version (the current time) at the end 
+
         # to force Render to show the newest one.
         clean_url = f"{base_url}?t={int(time.time())}"
         temp = data.get("temp", "N/A")
         humi = data.get("humidity", "N/A")
+        video = data.get("url_video","N/A")
         return {
                     "url": clean_url,
                     "temperature": temp,
                     "humidity": humi,
-                    "time_str": datetime.datetime.now().strftime("%H:%M:%S")
+                    "time_str": datetime.datetime.now().strftime("%H:%M:%S"),
+                    "url_video":video
                 }
     except FileNotFoundError:
         return None

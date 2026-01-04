@@ -3,11 +3,11 @@
 <head>
   <meta charset="utf-8">
   <title>Smart Camera</title>
-  <meta http-equiv="refresh" content="10"> 
+  <meta http-equiv="refresh" content="120"> 
   <style>
-    body { font-family: sans-serif; max-width: 640px; margin: 2rem auto; text-align: center; }
+    body { background-color: black;color: azure;font-family: sans-serif; max-width: 640px; margin: 2rem auto; text-align: center; }
     img  { max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 0 12px rgba(0,0,0,0.25); }
-    .meta { margin-top: 1rem; color: #444; }
+    .meta { margin-top: 1rem; color: #f5ea78; }
   </style>
 </head>
 <body>
@@ -15,14 +15,18 @@
 
   {% if last_event %}
     <p class="meta">
-      Last press: <strong>{{ last_event.time_str }}</strong><br>
+      Streaming from raspberry PI
+    </p>
+    <img src="{{ last_event.url_video }}" alt="Live Stream">
+    <p class="meta">
+      Last Picture recorded: <strong>{{ last_event.time_str }}</strong><br>
       ({{ last_event.age }} seconds ago)
     </p>
     <p>
       Temperature: <strong>{{ last_event.temperature }}</strong><br>
       Humidity: <strong>{{ last_event.humidity }}</strong><br>
     </p>
-    <img src="{{ last_event.url  }}"> 
+    <img src="{{ last_event.url  }}" width=50%> 
   {% else %}
     <p>No button presses recorded yet.</p>
   {% endif %}
