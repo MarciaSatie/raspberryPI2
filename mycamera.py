@@ -148,6 +148,7 @@ def updateJson(ObjKey, content, filename):
         # json.dump() converts the Python object back to a JSON string and writes to the file
         json.dump(data, file) # Using indent for pretty printing
 
+    # 4. Sync to Cloud via MQTT
     client.publish(MQTT_TOPIC, json.dumps(data))
 
 ## -------------- Main --------------------------------------------------------------------------
