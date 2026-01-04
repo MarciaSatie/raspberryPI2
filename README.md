@@ -19,6 +19,8 @@ This project connects hardware, cloud storage, and mobile interfaces to create a
 * MQTT: A "Broadcaster" that sends a data packet (JSON) to a public broker, mosquitto, every time a photo is taken.
 * Render: A web hosting service that runs your project's website, making your data visible in a standard browser.
 
+![Image Project](img_src/image.png)
+
 
 # Clone the repository
 git clone https://github.com/MarciaSatie/raspberrypi_project
@@ -29,12 +31,14 @@ cd pi_project
 https://raspberrypi-project.onrender.com
 
 ### Set up virtual environment
-python -m venv .venv (if the downloaded file doesn't contain venv)
+```python
+python -m venv .venv #if you don't have venv in the project
 source .venv/bin/activate
-
+```
 ### Run main script:
+```python
 python mycamera.py
-
+```
 ### 🛠 Technologies Used
 
 Raspberry Pi 4
@@ -45,16 +49,17 @@ MQTT
 Cloudinary
 CloudFlare
 Blynk
+Github
 
 ### 🧱 IoT Architecture
 
-### 🔍 System Layers
 | Layer           | Implementation                          |
 | --------------- | --------------------------------------- |
 | **Sensor**      | Raspberry Pi Camera Module              |
 | **Processing**  | Python to process the information       |
 | **Network**     | Wi-Fi using MQTT,Cloudflare Tunnel      |
-| **Cloud**       | Cloudinary to store the picture         |
+| **Cloud**       | Cloudinary to store the picture         | 
+|   **Cloud**     | Cloudiflare to provide Url for streaming|
 | **Application** | Render for Web dashboard                |
-| **Mobile App**  | Blynk for ceelphone's remote access     | 
+| **Mobile App**  | Blynk for cellphone's remote access     | 
 
