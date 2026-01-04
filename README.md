@@ -63,3 +63,14 @@ Github
 | **Application** | Render for Web dashboard                |
 | **Mobile App**  | Blynk for cellphone's remote access     | 
 
+### 🎓 Learning resorces:
+#### Logic
+- [daemon threading](https://www.geeksforgeeks.org/python/python-daemon-threads/) - To amke teh Streaming run in parallel with main program in the background.
+- [dotenv](https://github.com/orgs/community/discussions/151885) - To secure API's and Keys using .env file. 
+#### Streaming
+- [Streaming with Flask](https://blog.miguelgrinberg.com/post/video-streaming-with-flask) - Exemples about how to use Flask to stream videos.
+- [OpenCv](https://www.geeksforgeeks.org/python/python-opencv-imencode-function/) - To translate camera's data in JPG images. 
+#### Networking
+- [subprocess.Popen](https://www.geeksforgeeks.org/python/python-subprocess-module/) - To execute commands automatically in the terminal and return outputs.
+- [Cloudflare Tunnels](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/) - Securely exposing the MJPEG stream.
+- [TryCloudflare Documentation](https://developers.cloudflare.com/cloudflare-one/networks/connectors/cloudflare-tunnel/do-more-with-tunnels/trycloudflare/)- Specifically for creating those temporary .trycloudflare.com links.

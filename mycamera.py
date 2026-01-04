@@ -131,10 +131,14 @@ def handle_v2_write(value):
    
 
 def updateJson(ObjKey, content, filename):
-    # 1. Read the existing data from the file
-    with open(filename, 'r') as file:
-        # json.load() converts JSON data into a Python dictionary/list
-        data = json.load(file)
+    # If the file doesn't exist, start with an empty dictionary
+    if not os.path.exists(filename):
+        data = {}
+    else:
+        # 1. Read the existing data from the file
+        with open(filename, 'r') as file:
+            # json.load() converts JSON data into a Python dictionary/list
+            data = json.load(file)
 
     # 2. Modify the data (in this case, change the 'age' field)
     data[ObjKey] = content
@@ -143,6 +147,8 @@ def updateJson(ObjKey, content, filename):
     with open(filename, 'w') as file:
         # json.dump() converts the Python object back to a JSON string and writes to the file
         json.dump(data, file) # Using indent for pretty printing
+
+    client.publish(MQTT_TOPIC, json.dumps(data))
 
 ## -------------- Main --------------------------------------------------------------------------
 sense = SenseHat()
@@ -159,7 +165,7 @@ print("Camera started. Press the Sense HAT joystick (middle) to take a photo.")
 # 3. START STREAM SERVER IN BACKGROUND
 # We pass the 'picam2' object to the server so it can use it
 server_thread = threading.Thread(target=run_server, args=(picam2,))
-server_thread.daemon = True
+server_thread.daemon = True # background thread, preventing the main program from not exiting 
 server_thread.start()
 
 video_path = get_global_url() 
