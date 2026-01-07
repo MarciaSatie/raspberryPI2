@@ -22,20 +22,25 @@ This project connects hardware, cloud storage, and mobile interfaces to create a
 
 ![Image Project](img_src/image.png)
 
+### Render Website link:
+https://raspberrypi-project.onrender.com
 
 # Clone the repository
 git clone https://github.com/MarciaSatie/raspberrypi_project
 cd pi_project
-
-
-### Render Website link:
-https://raspberrypi-project.onrender.com
 
 ### Set up virtual environment
 ```python
 python -m venv .venv #if you don't have venv in the project
 source .venv/bin/activate
 ```
+
+### Create .env file (Blynk Auth Key)
+```python
+# for extra security I didn't upload my .env file with my API's Keys, so you will need to create a new (.env) file and add your own Keys.
+BLYNK_KEY='<ADD YOUR BLYNK AUTH KEY HERE>'
+```
+
 ### Run main script:
 ```python
 python mycamera.py

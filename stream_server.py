@@ -1,4 +1,4 @@
-## This script will transform teh data received from Raspberry Pi camera, transform in a video and 
+## This script will transform the data received from Raspberry Pi camera, transform in a video and 
 ## send the to be streamed in the web link.
 
 import time
@@ -78,18 +78,18 @@ def index():
 # reference: https://blog.miguelgrinberg.com/post/video-streaming-with-flask
 @app.route('/video_feed') #tells Flask which URL triggers this specific function.
 def video_feed():
-    # return Response: It "wraps" your camera data in a way that the browser understands it is a continuous stream.
+    # return Response: It "wraps" camera's data in a way that the browser understands it is a continuous stream.
     return Response(generate_frames(),mimetype='multipart/x-mixed-replace; boundary=frame')
     # mimetype='multipart/x-mixed-replace;...' : It tells the browser what kind of "file" it is receiving.
 
 
-# This is the function your 'mycamera.py' will call
+# This is the function that 'mycamera.py' will call
 def run_server(camera_obj):
     global shared_camera
     shared_camera = camera_obj
 
-    # using Flask, that creats a "Ignition Switch" that starts your web server.
-    # host='0.0.0.0' (Public Access).This is what allows you to open the video stream from your phone or another laptop on the same Wi-Fi
+    # using Flask, that creats a "Ignition Switch" that starts a web server.
+    # host='0.0.0.0' (Public Access).This is what allows to open the video stream from the phone or another laptop on the same Wi-Fi
     # port=5000 (The "Door" Number)
     # threaded=True (Handling Multiple Visitors)
     app.run(host='0.0.0.0', port=5000, threaded=True, use_reloader=False)
