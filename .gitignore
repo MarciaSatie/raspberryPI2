@@ -13,4 +13,5 @@ static/last_visitor.jpg
 
 # 4. OS Specific (Optional but clean)
 .DS_Store
-Thumbs.db
+Thumbs.db__pycache__/
+.venv/
