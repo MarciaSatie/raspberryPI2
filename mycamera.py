@@ -7,6 +7,7 @@ from datetime import datetime
 
 from sense_hat import SenseHat
 from picamera2 import Picamera2
+from libcamera import Transform
 
 from upload_cloudinary import upload_image
 import paho.mqtt.client as mqtt
@@ -156,9 +157,24 @@ sense = SenseHat()
 sense.clear(0, 0, 0)
 
 picam2 = Picamera2()
-picam2.configure(picam2.create_still_configuration())
-config = picam2.create_video_configuration(main={"size": (640, 480)})
-picam2.configure(config)
+
+# 1. Create a proper Transform object
+# This satisfies the "Transform has incorrect type" error
+vh_flip = Transform()
+vh_flip.vflip = True   # vertical flip
+vh_flip.hflip = True  # horizontal flip
+
+# 2. Apply it to the STILL configuration
+still_config = picam2.create_still_configuration(transform=vh_flip)
+picam2.configure(still_config)
+
+# 3. Apply it to the VIDEO configuration
+video_config = picam2.create_video_configuration(
+    main={"size": (640, 480)}, 
+    transform=vh_flip
+)
+picam2.configure(video_config)
+
 picam2.start()
 time.sleep(2)  # Give the sensor 2 seconds to stabilize
 print("Camera started. Press the Sense HAT joystick (middle) to take a photo.")
